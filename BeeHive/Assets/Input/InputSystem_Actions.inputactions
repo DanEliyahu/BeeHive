@@ -12,19 +12,39 @@
                     "id": "44d34153-ded7-4fc9-a09c-1c10b71158c1",
                     "expectedControlType": "",
                     "processors": "",
+                    "interactions": "Tap",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Position",
+                    "type": "Value",
+                    "id": "1a7e9d73-9558-41da-877b-9ad818dbea07",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
                     "interactions": "",
-                    "initialStateCheck": false
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
                 {
                     "name": "",
-                    "id": "ea1e83fd-120a-45e6-8dd3-4f298c4f452a",
-                    "path": "<Mouse>/leftButton",
+                    "id": "d5691423-82b0-467b-9bbb-595d99b06bd1",
+                    "path": "<Pointer>/press",
                     "interactions": "",
                     "processors": "",
-                    "groups": ";Keyboard&Mouse",
+                    "groups": ";Keyboard&Mouse;Touch",
                     "action": "Click",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6cf60cd6-a2f1-4009-9dfa-a05b8adfe4d4",
+                    "path": "<Pointer>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse;Touch",
+                    "action": "Position",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
@@ -47,7 +67,7 @@
                     "name": "Submit",
                     "type": "Button",
                     "id": "7607c7b6-cd76-4816-beef-bd0341cfe950",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
@@ -56,7 +76,7 @@
                     "name": "Cancel",
                     "type": "Button",
                     "id": "15cef263-9014-4fd5-94d9-4e4a6234a6ef",
-                    "expectedControlType": "Button",
+                    "expectedControlType": "",
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
