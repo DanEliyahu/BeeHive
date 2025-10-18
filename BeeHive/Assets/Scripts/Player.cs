@@ -3,59 +3,72 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     [SerializeField] private float moveSpeed = 8;
-    [SerializeField] private float stopThreshold = 0.5f;
+    public float MoveSpeed => moveSpeed;
+    [SerializeField] private float attackStopDistance = 0.5f;
+    public float AttackStopDistance => attackStopDistance;
+    public float StopDistance { get; private set; }
 
-    private Rigidbody2D rb;
+    [SerializeField] private float damagePerSecond = 1;
+    public float DamagePerSecond => damagePerSecond;
+    public Vector2 TargetPosition { get; private set; }
+    public Transform Target { get; private set; }
+
+    public Rigidbody2D Rb { get; private set; }
     private Camera mainCamera;
 
-    private Vector2 currentDestination;
-    private bool shouldMove;
-    private float currentStopThreshold;
+    private StateMachine stateMachine;
+
+    public PlayerIdleState IdleState { get; private set; }
+    public PlayerAttackState AttackState { get; private set; }
+    public PlayerMoveState MoveState { get; private set; }
+
+    private void Awake()
+    {
+        Rb = GetComponent<Rigidbody2D>();
+
+        stateMachine = new StateMachine();
+        IdleState = new PlayerIdleState(this, stateMachine);
+        AttackState = new PlayerAttackState(this, stateMachine);
+        MoveState = new PlayerMoveState(this, stateMachine);
+    }
 
     private void Start()
     {
         mainCamera = Camera.main;
+        stateMachine.Initialize(IdleState);
     }
 
-    private void Awake()
+    private void Update()
     {
-        rb = GetComponent<Rigidbody2D>();
+        stateMachine.Update();
     }
 
-    // Update is called once per frame
     private void FixedUpdate()
     {
-        MoveToDestination();
+        stateMachine.FixedUpdate();
     }
 
-    public void SetDestination(Vector2 screenPosition)
+    public void HandleInput(Vector2 screenPosition)
     {
         if (!mainCamera) return;
 
-        var worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
+        Vector2 worldPosition = mainCamera.ScreenToWorldPoint(screenPosition);
         var hit = Physics2D.Raycast(worldPosition, Vector2.zero);
-        if (hit)
+        if (hit.collider)
         {
-            currentDestination = hit.transform.position;
-            currentStopThreshold = stopThreshold;
+            Target = hit.transform;
+            TargetPosition = Target.position;
         }
         else
         {
-            currentDestination = worldPosition;
-            currentStopThreshold = 0;
+            TargetPosition = worldPosition;
         }
 
-        shouldMove = true;
+        stateMachine.CurrentState.HandleInput(worldPosition, hit);
     }
 
-    private void MoveToDestination()
+    public void SetStopDistance(float stopDistance)
     {
-        if (Vector2.Distance(transform.position, currentDestination) <= currentStopThreshold)
-            shouldMove = false;
-
-        if (!shouldMove) return;
-
-        var movement = Vector2.MoveTowards(transform.position, currentDestination, moveSpeed * Time.fixedDeltaTime);
-        rb.MovePosition(movement);
+        StopDistance = stopDistance;
     }
 }

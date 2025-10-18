@@ -38,7 +38,7 @@ public class InputManager : MonoBehaviour
             if (isClicked)
             {
                 var pointerPosition = positionAction.ReadValue<Vector2>();
-                player.SetDestination(pointerPosition);
+                player.HandleInput(pointerPosition);
             }
         }
 
